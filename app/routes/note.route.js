@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.route('/').get(notes.findAll).delete(notes.deleteAll)
 
-router.route('/add').post(verify, notes.create)
+router.route('/add').post(notes.create)
 
 // router.route('/importants').get(notes.findAllImportant)
 // router.route('/schematest').get(notes.schemaTest)
