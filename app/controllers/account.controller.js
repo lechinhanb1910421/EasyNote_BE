@@ -89,7 +89,11 @@ exports.findAll = async (req, res, next) => {
     const { email } = req.query
     if (email) {
       const account = await Account.find({ email: { $regex: new RegExp(email), $options: 'i' } })
-      return res.send(account[0])
+      if (account[0]) {
+        return res.send(account[0])
+      } else {
+        return next(new ApiError(400, 'Email is not found'))
+      }
     } else {
       documents = await Account.find({})
     }
