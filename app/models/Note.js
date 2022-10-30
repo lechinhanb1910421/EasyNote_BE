@@ -24,6 +24,10 @@ const noteSchema = new mongoose.Schema(
     important: {
       type: Boolean,
       default: false
+    },
+    state: {
+      type: String,
+      default: 'planning'
     }
   },
   {
