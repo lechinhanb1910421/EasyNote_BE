@@ -11,7 +11,6 @@ router.route('/add').post(notes.create)
 // router.route('/importants').get(notes.findAllImportant)
 // router.route('/schematest').get(notes.schemaTest)
 
-router.route('/:id').get(notes.findOne).put(notes.update)
-// .delete(notes.delete);
+router.route('/:id').get(notes.findOne).put(notes.update).delete(notes.delete)
 
 module.exports = router

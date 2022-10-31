@@ -14,6 +14,7 @@ exports.create = async (req, res, next) => {
     const note = new Note({
       email: req.body.email,
       title: req.body.title,
+      state: req.body.state,
       description: req.body.description,
       important: req.body.important
     })
