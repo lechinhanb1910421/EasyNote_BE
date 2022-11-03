@@ -60,7 +60,13 @@ exports.update = async (req, res, next) => {
   }
   try {
     const filter = { _id: ObjectId.isValid(req.params.id) ? new ObjectId(req.params.id) : null }
-    const update = { email: req.body.email, title: req.body.title, description: req.body.description, important: req.body.important }
+    const update = {
+      email: req.body.email,
+      title: req.body.title,
+      description: req.body.description,
+      state: req.body.state,
+      important: req.body.important
+    }
     Object.keys(update).forEach((key) => update[key] === undefined && delete update[key])
     const document = await Note.findOneAndUpdate(filter, { $set: update }, { returnDocument: 'after' })
     if (!document) {
