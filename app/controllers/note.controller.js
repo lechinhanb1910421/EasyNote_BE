@@ -4,7 +4,7 @@ var ObjectId = require('mongoose').Types.ObjectId
 
 exports.create = async (req, res, next) => {
   if (!req.body?.email) {
-    return next(new ApiError(400, 'Name can not be empty'))
+    return next(new ApiError(400, 'Email can not be empty'))
   }
   if (!req.body?.description) {
     return next(new ApiError(400, 'Description can not be empty'))
