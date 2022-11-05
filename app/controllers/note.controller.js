@@ -54,6 +54,19 @@ exports.findOne = async (req, res, next) => {
     return next(new ApiError(500, `Error retrieving note with id = ${req.params.id}`))
   }
 }
+exports.findByKeyword = async (req, res, next) => {
+  let documents = []
+  try {
+    const { keyword } = req.query
+    if (keyword) {
+      documents = await Note.find({ title: { $regex: new RegExp(keyword), $options: 'i' } })
+      return res.send(documents)
+    }
+  } catch (error) {
+    return next(new ApiError(500, 'An error eccured while retrieving the notes'))
+  }
+  return res.send(documents)
+}
 exports.update = async (req, res, next) => {
   if (Object.keys(req.body).length == 0) {
     return next(new ApiError(400, 'Data to update can not be empty'))
