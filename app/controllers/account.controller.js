@@ -2,8 +2,11 @@ const ApiError = require('../api-error')
 const Account = require('../models/Account')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-// const mongoose = require("mongoose");
 
+exports.getHashedPass = async (password) => {
+  const salt = await bcrypt.genSalt(12)
+  return await bcrypt.hash(password, salt)
+}
 exports.create = async (req, res, next) => {
   if (!req.body?.email) {
     return next(new ApiError(400, 'Email can not be empty'))
@@ -18,13 +21,11 @@ exports.create = async (req, res, next) => {
     return next(new ApiError(400, 'Last Name can not be empty'))
   }
   try {
-    const salt = await bcrypt.genSalt(12)
-    const hashedPass = await bcrypt.hash(req.body.password, salt)
     const account = new Account({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
-      password: hashedPass,
+      password: this.getHashedPass(req.body.password),
       profilePic: req.body.profilePic
     })
     const isExisted = await Account.findOne({ email: account.email })
@@ -59,7 +60,7 @@ exports.login = async (req, res, next) => {
       return res.status(400).send({ message: 'Invalid password' })
     } else {
       const token = jwt.sign({ _id: account._id }, process.env.TOKEN_SECRET)
-      return res.header('auth-token', token).status(200).send({ message: 'Logged In', token: token })
+      return res.status(200).send({ message: 'Logged In', token: token })
     }
   } catch (error) {
     return next(new ApiError(500, 'An error eccured while loggin in the account'))
@@ -120,7 +121,10 @@ exports.update = async (req, res, next) => {
     }
   }
   const payload = req.body
-  Object.keys(payload).forEach((key) => (payload[key] === undefined || payload[key] == null || key == 'password') && delete payload[key])
+  Object.keys(payload).forEach((key) => (payload[key] === undefined || payload[key] == null) && delete payload[key])
+  if (payload.password) {
+    payload.password = await this.getHashedPass(payload.password)
+  }
   try {
     const document = await Account.findOneAndUpdate({ email: req.params.email }, { $set: payload }, { returnDocument: 'after' })
     if (!document) {
