@@ -48,18 +48,6 @@ class AccountService {
     } catch (error) {
       return { status: 'error' }
     }
-    // const account = this.extractAccountData(payload)
-    // const dbAccount = await this.account.findOne({ email: account.email })
-    // if (dbAccount) {
-    //   return 'Existed'
-    // } else {
-    //   const result = await this.account.findOneAndUpdate(
-    //     account,
-    //     { $set: {} },
-    //     { returnDocument: 'after', upsert: true }
-    //   )
-    //   return result.value
-    // }
   }
   validatePass(expect, actual) {
     return new Promise((resolve, reject) => {
@@ -102,9 +90,11 @@ class AccountService {
     // const filter = {
     //   email: email
     // }
-    const update = this.extractAccountData(payload)
-    const result = await this.account.findOneAndUpdate({ email: email }, { $set: update }, { returnDocument: 'after' })
-    return result.value
+    Object.keys(payload).forEach((key) => payload[key] === undefined && delete payload[key])
+    console.log(payload)
+    // const update = this.extractAccountData(payload)
+    // const result = await this.account.findOneAndUpdate({ email: email }, { $set: update }, { returnDocument: 'after' })
+    // return result.value
   }
   // async delete (id) {
   //   const result = await this.account.findOneAndDelete({

@@ -115,18 +115,17 @@ exports.findOne = async (req, res, next) => {
 }
 exports.update = async (req, res, next) => {
   if (req.body.firstName == null || req.body.firstName == '') {
-    return next(new ApiError(400, 'Name can not be empty'))
-  }
-  if (req.body.lastName == null || req.body.lastName == '') {
-    return next(new ApiError(400, 'Name can not be empty'))
-  }
-  try {
-    const updateName = req.body.firstName
-    const document = await Account.findOneAndUpdate({ email: req.params.email }, { $set: { name: updateName } }, { returnDocument: 'after' })
-    if (!document) {
-      return next(new ApiError(404, `Account with email ${req.body.email} not found`))
+    if (req.body.lastName == null || req.body.lastName == '') {
+      return next(new ApiError(400, 'Must have one firstname or last name'))
     }
-    return res.send({ message: 'Account was updated successfully !' })
+  }
+  const payload = req.body
+  Object.keys(payload).forEach((key) => (payload[key] === undefined || payload[key] == null || key == 'password') && delete payload[key])
+  try {
+    const document = await Account.findOneAndUpdate({ email: req.params.email }, { $set: payload }, { returnDocument: 'after' })
+    if (!document) {
+    }
+    return res.send({ message: 'Account was updated successfully !', account: document })
   } catch (error) {
     return next(new ApiError(500, `Error updating note with email = ${req.params.email}`))
   }
