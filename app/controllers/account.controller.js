@@ -2,7 +2,6 @@ const ApiError = require('../api-error')
 const Account = require('../models/Account')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-
 exports.getHashedPass = async (password) => {
   const salt = await bcrypt.genSalt(12)
   return await bcrypt.hash(password, salt)
@@ -117,7 +116,9 @@ exports.findOne = async (req, res, next) => {
 exports.update = async (req, res, next) => {
   if (req.body.firstName == null || req.body.firstName == '') {
     if (req.body.lastName == null || req.body.lastName == '') {
-      return next(new ApiError(400, 'Must have one firstname or last name'))
+      if (req.body.password == null || req.body.password == '') {
+        return next(new ApiError(400, 'Request body does not cantain any key'))
+      }
     }
   }
   const payload = req.body
