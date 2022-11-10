@@ -24,7 +24,7 @@ exports.create = async (req, res, next) => {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
-      password: this.getHashedPass(req.body.password),
+      password: await this.getHashedPass(req.body.password),
       profilePic: req.body.profilePic
     })
     const isExisted = await Account.findOne({ email: account.email })
@@ -40,6 +40,15 @@ exports.create = async (req, res, next) => {
   } catch (error) {
     console.error(error)
     return next(new ApiError(500, 'An error eccured while creating the account'))
+  }
+}
+exports.delete = async (req, res, next) => {
+  const isExisted = await Account.findOne({ email: req.params.email })
+  if (!isExisted) {
+    return res.status(400).send({ message: 'Email is not found' })
+  } else {
+    const result = await Account.findOneAndDelete({ email: { $regex: new RegExp(req.params.email), $options: 'i' } })
+    return res.send({ message: 'Account was successfully delete' })
   }
 }
 exports.login = async (req, res, next) => {
