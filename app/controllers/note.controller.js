@@ -111,15 +111,3 @@ exports.deleteAll = async (req, res, next) => {
     return next(new ApiError(500, 'An error eccured while removing all notes'))
   }
 }
-// exports.findAllImportant = async (req, res, next) => {
-//   try {
-//     const noteService = new NoteService(MongoDB.client);
-//     const documents = await noteService.findImportant();
-//     return res.send(documents);
-//   } catch (error) {
-//     return next(new ApiError(500, "An error eccured while retrieving the notes"));
-//   }
-// };
-exports.testAdd = async (req, res, next) => {
-  return res.send('Note added')
-}
