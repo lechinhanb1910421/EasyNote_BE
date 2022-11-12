@@ -126,7 +126,9 @@ exports.update = async (req, res, next) => {
   if (req.body.firstName == null || req.body.firstName == '') {
     if (req.body.lastName == null || req.body.lastName == '') {
       if (req.body.password == null || req.body.password == '') {
-        return next(new ApiError(400, 'Request body does not cantain any key'))
+        if (req.body.profilePic == null) {
+          return next(new ApiError(400, 'Request body does not cantain any key'))
+        }
       }
     }
   }
