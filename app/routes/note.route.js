@@ -9,6 +9,6 @@ router.route('/add').post(notes.create)
 
 router.route('/:id').get(notes.findOne).put(notes.update).delete(notes.delete)
 
-router.route('/search').get(notes.findByKeyword)
+router.route('/search').post(notes.findByKeyword)
 
 module.exports = router

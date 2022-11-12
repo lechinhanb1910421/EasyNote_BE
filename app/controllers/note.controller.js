@@ -80,7 +80,7 @@ exports.update = async (req, res, next) => {
       state: req.body.state,
       important: req.body.important
     }
-    Object.keys(update).forEach((key) => update[key] === undefined && delete update[key])
+    Object.keys(update).forEach((key) => (update[key] === undefined || update[key] == null || key == 'id') && delete update[key])
     const document = await Note.findOneAndUpdate(filter, { $set: update }, { returnDocument: 'after' })
     if (!document) {
       return next(new ApiError(404, 'Note not found'))
