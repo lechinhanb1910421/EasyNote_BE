@@ -10,5 +10,6 @@ router.route('/:email').patch(account.update).delete(account.delete)
 router.route('/login').post(account.login)
 
 router.route('/user').get(account.getUser)
+router.route('/role').get(account.getUserRole)
 
 module.exports = router

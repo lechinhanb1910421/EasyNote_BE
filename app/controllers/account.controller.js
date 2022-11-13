@@ -67,8 +67,9 @@ exports.login = async (req, res, next) => {
     if (!validPass) {
       return res.status(400).send({ message: 'Invalid password' })
     } else {
-      const token = jwt.sign({ _id: account._id }, process.env.TOKEN_SECRET)
-      return res.status(200).send({ message: 'Logged In', token: token, role: account.role })
+      const auth_token = jwt.sign({ _id: account._id }, process.env.TOKEN_SECRET)
+      const role_token = jwt.sign({ role: account.role }, process.env.ROLE_SECRET)
+      return res.status(200).send({ message: 'Logged In', token: auth_token, role: role_token })
     }
   } catch (error) {
     return next(new ApiError(500, 'An error eccured while loggin in the account'))
@@ -87,6 +88,22 @@ exports.getUser = async (req, res, next) => {
     const user_id = decoded._id
     const user = await Account.findById(user_id)
     return res.send(user)
+  } catch (error) {
+    return next(new ApiError(500, 'Invalid access token'))
+  }
+}
+exports.getUserRole = async (req, res, next) => {
+  const token = req.query.role
+  if (!token) {
+    return res.status(401).json({
+      status: 'failed'
+    })
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.ROLE_SECRET)
+    const userRole = decoded.role
+    console.log(userRole)
+    return res.send({ message: 'success', role: userRole })
   } catch (error) {
     return next(new ApiError(500, 'Invalid access token'))
   }
