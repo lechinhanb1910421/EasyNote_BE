@@ -68,7 +68,7 @@ exports.login = async (req, res, next) => {
       return res.status(400).send({ message: 'Invalid password' })
     } else {
       const token = jwt.sign({ _id: account._id }, process.env.TOKEN_SECRET)
-      return res.status(200).send({ message: 'Logged In', token: token })
+      return res.status(200).send({ message: 'Logged In', token: token, role: account.role })
     }
   } catch (error) {
     return next(new ApiError(500, 'An error eccured while loggin in the account'))

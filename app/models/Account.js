@@ -33,6 +33,10 @@ const accountSchema = new mongoose.Schema(
     profilePic: {
       type: String,
       default: 'src/assets/imgs/default_user.jpg'
+    },
+    role: {
+      type: String,
+      default: 'normal'
     }
   },
   {
