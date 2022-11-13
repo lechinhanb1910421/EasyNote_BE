@@ -102,7 +102,6 @@ exports.getUserRole = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.ROLE_SECRET)
     const userRole = decoded.role
-    console.log(userRole)
     return res.send({ message: 'success', role: userRole })
   } catch (error) {
     return next(new ApiError(500, 'Invalid access token'))
