@@ -102,12 +102,24 @@ exports.delete = async (req, res, next) => {
   }
 }
 exports.deleteAll = async (req, res, next) => {
-  try {
-    const result = await Note.deleteMany({})
-    return res.send({
-      message: `${result.deletedCount} notes were deleted successfully !`
-    })
-  } catch (error) {
-    return next(new ApiError(500, 'An error eccured while removing all notes'))
+  const userEmail = req.query.email
+  if (userEmail) {
+    try {
+      const result = await Note.deleteMany({ email: userEmail })
+      return res.send({
+        message: `${result.deletedCount} notes were deleted successfully !`
+      })
+    } catch (error) {
+      return next(new ApiError(500, 'An error eccured while removing all notes'))
+    }
+  } else {
+    try {
+      const result = await Note.deleteMany({})
+      return res.send({
+        message: `${result.deletedCount} notes were deleted successfully !`
+      })
+    } catch (error) {
+      return next(new ApiError(500, 'An error eccured while removing all notes'))
+    }
   }
 }
